@@ -1,20 +1,14 @@
 'use strict'
 
 const OpenAI = require('openai');
-
-process.env["OPENAI_API_TYPE"] = "azure"
-process.env["OPENAI_API_KEY"] = "87ecb3f61fb14d3abf7b4c4a32b66ef2"
-process.env["OPENAI_API_BASE"] = "https://openai-india-hackathon1.openai.azure.com/openai/deployments/GPT-35-turbo/"
-process.env["OPENAI_API_VERSION"] = "2023-07-01-preview"
-
-
+const sql = require('mssql')
 
 exports.ChatService = function () {
     const openai = new OpenAI({
         apiKey: "87ecb3f61fb14d3abf7b4c4a32b66ef2",
         baseURL: "https://openai-india-hackathon1.openai.azure.com/openai/deployments/GPT-35-turbo/",
-        defaultQuery: { 'api-version': process.env["OPENAI_API_VERSION"]  },
-        defaultHeaders: { 'api-key': process.env["OPENAI_API_KEY"] },
+        defaultQuery: { 'api-version': "2023-07-01-preview"  },
+        defaultHeaders: { 'api-key': "87ecb3f61fb14d3abf7b4c4a32b66ef2" },
     });
 
     this.createCompletion = async function (message) {
@@ -30,5 +24,18 @@ exports.ChatService = function () {
           });
 
         return completion.choices[0].message.content;
+    };
+
+    this.uploadData= async function(jsonData) {
+        let pool = await sql.connect({
+            user: 'cybersentinel',
+            password: 'AvalaraHack2023',
+            server: 'cybersentinelpublic.postgres.database.azure.com',
+            database: 'cybersentinel'
+        });
+        
+        let result1 = await pool.request()
+            .input('input_parameter', sql.Int, value)
+            .query('select * from mytable where id = @input_parameter');
     };
 }

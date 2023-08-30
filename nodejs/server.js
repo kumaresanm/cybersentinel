@@ -1,7 +1,7 @@
 const { ChatController } = require('./controllers/chatController');
 const express = require('express');
 const { engine } = require('express-handlebars');
-const { ChatService } = require('./services/chatservice');
+const { ChatService } = require('./services/chatService');
 
 (async () => {
   const app = express();
