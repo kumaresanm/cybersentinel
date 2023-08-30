@@ -1,6 +1,6 @@
 import json
 import os
-import psycopg
+import pyodbc 
 import requests
 import sys
 
@@ -140,34 +140,41 @@ for idx in range(len(income_statment_data["annualReports"])):
 
 print("Writing data to the Database!")
 
-with psycopg.connect("host=cybersentinelpublic.postgres.database.azure.com port=5432 dbname=postgres user=cybersentinel password=AvalaraHack2023") as conn:
+with pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=cybersentinel.database.windows.net;Database=cybersentinel;UID=cybersentinel;PWD=AvalaraHack2023") as conn:
     with conn.cursor() as cur:
 
         for r in records:
-            print(f"Writing record for ticker '{r['ticker']} and period end {r['fiscal_date_ending']}")
+            print(f"Writing record for ticker '{r['ticker']}' and period end {r['fiscal_date_ending']}")
             cur.execute(f"""
-                INSERT INTO financial_metrics
-                    (company_name, earnings_per_share, pe_ratio, pb_ratio, return_on_equity, return_on_assets, debt_to_equity_ratio, current_ratio, quick_ratio, gross_margin,
-                        operating_margin, net_profit_margin, free_cash_flow, dividend_yield, dividend_payout_ratio, ocf_to_sales_ratio, inventory_turnover, ar_turnover, 
-                        capex_to_sales_ratio, working_capital, market_capitalization, revenue_growth, interest_ratio, symbol, fiscaldateending)
-                    VALUES('{r["ticker"]}', {r["earnings_per_share"]}, 0, 0, {r["return_on_equity"]}, {r["return_on_assets"]}, {r["debt_to_equity_ratio"]}, {r["current_ratio"]}, {r["quick_ratio"]}, {r["gross_margin"]}, 
-                        {r["operating_margin"]}, {r["net_profit_margin"]}, {r["free_cashflow"]}, 0, {r["dividend_payout_ratio"]}, {r["ocf_to_sales_ratio"]}, 0, 0,
-                        {r["capital_expenditure_ratio"]}, 0, 0, 0, {r["interest_ratio"]}, '{r["ticker"]}',' {r["fiscal_date_ending"]}')
-                ON CONFLICT ON CONSTRAINT uq_symbol_dateend DO UPDATE
-                    SET earnings_per_share = {r["earnings_per_share"]},
-                        return_on_equity = {r["return_on_equity"]},
-                        return_on_assets = {r["return_on_assets"]},
-                        debt_to_equity_ratio = {r["debt_to_equity_ratio"]},
-                        current_ratio = {r["current_ratio"]},
-                        quick_ratio = {r["quick_ratio"]},
-                        gross_margin = {r["gross_margin"]},
-                        operating_margin = {r["operating_margin"]},
-                        net_profit_margin = {r["net_profit_margin"]},
-                        free_cash_flow = {r["free_cashflow"]},
-                        dividend_payout_ratio = {r["dividend_payout_ratio"]},
-                        ocf_to_sales_ratio = {r["ocf_to_sales_ratio"]},
-                        capex_to_sales_ratio = {r["capital_expenditure_ratio"]},
-                        interest_ratio = {r["interest_ratio"]}
+                BEGIN TRAN
+                        
+                    UPDATE financial_metrics
+                        SET earnings_per_share = {r["earnings_per_share"]},
+                            return_on_equity = {r["return_on_equity"]},
+                            return_on_assets = {r["return_on_assets"]},
+                            debt_to_equity_ratio = {r["debt_to_equity_ratio"]},
+                            current_ratio = {r["current_ratio"]},
+                            quick_ratio = {r["quick_ratio"]},
+                            gross_margin = {r["gross_margin"]},
+                            operating_margin = {r["operating_margin"]},
+                            net_profit_margin = {r["net_profit_margin"]},
+                            free_cash_flow = {r["free_cashflow"]},
+                            dividend_payout_ratio = {r["dividend_payout_ratio"]},
+                            ocf_to_sales_ratio = {r["ocf_to_sales_ratio"]},
+                            capex_to_sales_ratio = {r["capital_expenditure_ratio"]},
+                            interest_ratio = {r["interest_ratio"]}
+                        WHERE symbol = '{r["ticker"]}' AND fiscaldateending = '{r["fiscal_date_ending"]}'
+                    IF (@@ROWCOUNT = 0)
+                    BEGIN    
+                        INSERT INTO financial_metrics
+                            (company_name, earnings_per_share, pe_ratio, pb_ratio, return_on_equity, return_on_assets, debt_to_equity_ratio, current_ratio, quick_ratio, gross_margin,
+                                operating_margin, net_profit_margin, free_cash_flow, dividend_yield, dividend_payout_ratio, ocf_to_sales_ratio, inventory_turnover, ar_turnover, 
+                                capex_to_sales_ratio, working_capital, market_capitalization, revenue_growth, interest_ratio, symbol, fiscaldateending)
+                            VALUES('{r["ticker"]}', {r["earnings_per_share"]}, 0, 0, {r["return_on_equity"]}, {r["return_on_assets"]}, {r["debt_to_equity_ratio"]}, {r["current_ratio"]}, {r["quick_ratio"]}, {r["gross_margin"]}, 
+                                {r["operating_margin"]}, {r["net_profit_margin"]}, {r["free_cashflow"]}, 0, {r["dividend_payout_ratio"]}, {r["ocf_to_sales_ratio"]}, 0, 0,
+                                {r["capital_expenditure_ratio"]}, 0, 0, 0, {r["interest_ratio"]}, '{r["ticker"]}','{r["fiscal_date_ending"]}')
+                    END
+                COMMIT
             """)
 
             conn.commit()
