@@ -14,7 +14,7 @@ def execute_sql_file(conn, cursor, file_path):
 fileTypes = ["balance_sheet", "cash_flow", "income_statement"]
 
 
-directory = Path("cybersentinel/scripts/Data")
+directory = Path("scripts/Data")
 
 # Get a list of all subdirectories within the directory
 folders = [item.name for item in directory.iterdir() if item.is_dir()]
@@ -24,7 +24,7 @@ for folder in folders:
     ticker= folder
     # Read JSON data from a file
     for fileType in fileTypes:
-        with open(f'cybersentinel/scripts/Data/{ticker}/{fileType}.json', 'r') as json_file:
+        with open(f'scripts/Data/{ticker}/{fileType}.json', 'r') as json_file:
             data = json.load(json_file)
 
         # Assuming each JSON object represents a row to be inserted

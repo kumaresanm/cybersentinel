@@ -1,0 +1,15 @@
+{
+    "name": "propertymanager",
+    "description": "Web portal for Property Managers to manage their Lodging Tax obligations",
+    "license": "ISC",
+    "version": "1.0.0",
+    "skylabSdkVersion": "2.2.1",
+    "author": {
+        "name": "MyLodgeTax",
+        "email": "dg-mylodgetaxengineering@avalara.com"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "express-handlebars": "^7.1.2"
+    }
+}
