@@ -1,2 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin-top: 20px;
+            background-color: #f8f9fa; /* Adjust the background color */
+        }
+        /* Chat online and offline status */
+        .chat-online {
+            color: #34ce57;
+        }
+        .chat-offline {
+            color: #e4606d;
+        }
+        /* Chat messages container */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            max-height: 800px;
+            overflow-y: scroll;
+        }
 
-Hello world
+        /* Chat message alignment */
+        .chat-message-left,
+        .chat-message-right {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .chat-message-left {
+            margin-right: auto;
+        }
+
+        .chat-message-right {
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+
+        /* Padding and margin adjustments */
+        .py-3 {
+            padding-top: 1rem!important;
+            padding-bottom: 1rem!important;
+        }
+
+        .px-4 {
+            padding-right: 1.5rem!important;
+            padding-left: 1.5rem!important;
+        }
+
+        .flex-grow-0 {
+            flex-grow: 0!important;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6!important;
+        }
+    </style>
+</head>
+<body>
+    <main class="content">
+    <div class="container p-0">
+
+        <h1 class="h3 mb-3">Messages</h1>
+
+        <div class="card">
+            <div class="row g-0">
+                <div class="col-12">
+                    <div class="position-relative">
+                        <div class="chat-messages p-4" id="chat-messages">
+                            <!-- Chat message elements will be appended here using JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-0 py-3 px-4 border-top">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Type your message" id="user-input">
+                            <button class="btn btn-primary" id="send-button">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+    <script>
+         const chatContainer = document.getElementById('chat-messages');
+        const promptInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        const chatHistory = [
+            { sender: 'user', message: 'Hello, how are you?' },
+            { sender: 'bot', message: 'Hi there! I\'m just a bot.' },
+            { sender: 'user', message: 'Can you help me with a question?' },
+            { sender: 'bot', message: 'Of course! I\'ll do my best.' },
+            { sender: 'user', message: 'What\'s the weather like today?' },
+            { sender: 'bot', message: 'I\'m not connected to the internet, but you can check a weather website for that.' }
+        ];
+
+        function appendMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', sender === 'user' ? 'chat-message-right' : 'chat-message-left'); // Updated classes
+
+            const icon = document.createElement('img');
+            icon.src = sender === 'user' ? 'https://bootdey.com/img/Content/avatar/avatar1.png' : 'https://bootdey.com/img/Content/avatar/avatar3.png';
+            icon.classList.add('rounded-circle', 'mr-1');
+            icon.alt = sender === 'user' ? 'You' : 'Sharon Lessman';
+            icon.width = 40;
+            icon.height = 40;
+
+            messageDiv.appendChild(icon);
+
+            const messageText = document.createElement('div');
+            messageText.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', sender === 'user' ? 'mr-3' : 'ml-3');
+            messageText.innerHTML = `<div class="font-weight-bold mb-1">${sender === 'user' ? 'You' : 'Sharon Lessman'}</div>${message}`;
+
+            messageDiv.appendChild(messageText);
+
+            chatContainer.appendChild(messageDiv);
+        }
+
+        chatHistory.forEach(({ sender, message }) => {
+            appendMessage(sender, message);
+        });
+
+        sendButton.addEventListener('click', () => {
+           const prompt = promptInput.value;
+            if (prompt) {
+                appendMessage('user', prompt);
+                const botResponse = 'Bot: ' + prompt + ' [Response]';
+                appendMessage('bot', botResponse);
+                promptInput.value = '';
+            }
+           /* const userMessage = promptInput.value;
+            if (userMessage) {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                });
+
+                const data = await response.json();
+                appendMessage('user', userMessage);
+                appendMessage('bot', data.botResponse);
+                messageInput.value = '';
+            }*/
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

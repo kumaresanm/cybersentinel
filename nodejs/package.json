@@ -9,6 +9,7 @@
         "email": "dg-mylodgetaxengineering@avalara.com"
     },
     "dependencies": {
+        "abortcontroller-polyfill": "^1.7.5",
         "express": "^4.18.2",
         "express-handlebars": "^7.1.2",
         "openai": "^4.3.1"

@@ -11,8 +11,8 @@ process.env["OPENAI_API_VERSION"] = "2023-07-01-preview"
 
 exports.ChatService = function () {
     const openai = new OpenAI({
-        apiKey: process.env["OPENAI_API_KEY"],
-        baseURL: process.env["OPENAI_API_BASE"],
+        apiKey: "87ecb3f61fb14d3abf7b4c4a32b66ef2",
+        baseURL: "https://openai-india-hackathon1.openai.azure.com/openai/deployments/GPT-35-turbo/",
         defaultQuery: { 'api-version': process.env["OPENAI_API_VERSION"]  },
         defaultHeaders: { 'api-key': process.env["OPENAI_API_KEY"] },
     });
