@@ -10,4 +10,28 @@ describe('CalculationsService', function () {
 
         result.should.exist;
     });
+
+    it('should run1', async function() {
+        this.timeout('30000');
+        const sut = new Sut();
+        const result = await sut.getCompanyMetrics('IBM');
+
+        result.should.exist;
+    });
+
+    it('should run2', async function() {
+        this.timeout('30000');
+        const sut = new Sut();
+        const result = await sut.getIndustryMetrics('Technology');
+
+        result.should.exist;
+    });
+
+    it('should run3', async function() {
+        this.timeout('30000');
+        const sut = new Sut();
+        const result = await sut.buildRiskReport('IBM', 'Technology');
+
+        result.should.exist;
+    });
 });

@@ -140,7 +140,7 @@ for idx in range(len(income_statment_data["annualReports"])):
 
 print("Writing data to the Database!")
 
-with pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=cybersentinel.database.windows.net;Database=cybersentinel;UID=cybersentinel;PWD=AvalaraHack2023") as conn:
+with pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=cybersentinel.database.windows.netcybersentinel.database.windows.net;Database=cybersentinel;UID=cybersentinel;PWD=AvalaraHack2023") as conn:
     with conn.cursor() as cur:
 
         for r in records:
