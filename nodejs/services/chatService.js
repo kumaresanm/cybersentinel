@@ -4,6 +4,7 @@ const OpenAI = require('openai');
 const sql = require('mssql')
 
 exports.ChatService = function () {
+    this.messages = [];
     const openai = new OpenAI({
         apiKey: "87ecb3f61fb14d3abf7b4c4a32b66ef2",
         baseURL: "https://openai-india-hackathon1.openai.azure.com/openai/deployments/GPT-35-turbo/",
@@ -11,9 +12,14 @@ exports.ChatService = function () {
         defaultHeaders: { 'api-key': "87ecb3f61fb14d3abf7b4c4a32b66ef2" },
     });
 
+    this.clearMessages = function() {
+        this.messages = [];
+    }
+
     this.createCompletion = async function (message) {
+        this.messages.push({ role: 'user', content: message })
         const completion = await openai.chat.completions.create({
-            messages: [{ role: 'user', content: message }],
+            messages: this.messages,
             model: 'gpt-3.5-turbo',
             temperature: 0.7,
             max_tokens: 800,

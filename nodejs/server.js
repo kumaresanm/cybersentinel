@@ -7,8 +7,9 @@ const { ChatService } = require('./services/chatService');
   const app = express();
   const port = 3000;
 
-  const controller = new ChatController();
   const chatService = new ChatService();
+  const controller = new ChatController(chatService);
+  
   // Create an instance of express-handlebars and define the json helper
   const hbs = engine({
     helpers: {
