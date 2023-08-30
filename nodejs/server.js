@@ -1,19 +1,17 @@
 
+const { ChatController } = require('./controllers/chatController');
+const express = require('express');
+const { engine } = require('express-handlebars');
+
 (async () => {
-
-    const { ChatController } = require('./controllers/chatController');
-    const express = require('express');
-    const handlebars = require('express-handlebars');
-
     const app = express();
     const port = 3000;
 
     const controller = new ChatController();
 
-    app.engine('.handlebars', handlebars({
-        extname: '.handlebars',
-        helpers: { scriptJson: object => (object === null || object === undefined ? '{}' : JSON.stringify(object).replace(/\//g, '\\/')) }
-    })).set('view engine', '.handlebars');
+    app.engine('handlebars', engine());
+    app.set('view engine', 'handlebars');
+    app.set('views', './views');
 
     app.get("/chat", controller.chat);
 
